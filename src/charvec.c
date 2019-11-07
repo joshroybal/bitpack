@@ -13,12 +13,22 @@ void create(struct character_vector *v)
 
 void append(struct character_vector *v, char c)
 {
+   char *tmp = (char *) NULL;
+
    ++(v->curr_siz);
-   if (v->curr_siz+1 > v->max_siz) {
+   if ((v->curr_siz + 1) > v->max_siz) {
       v->max_siz *= 2;
-      v->buf = (char *) realloc(v->buf, (v->max_siz+1) * sizeof(char));
+      tmp = (char *) realloc(v->buf, (v->max_siz + 1) * sizeof(char));
+      if (tmp == (char *) NULL) {
+         fprintf(stderr, "memory allocation error\n");
+         free(v->buf);
+         exit(1);
+      }
+      else {
+         v->buf = tmp;
+      }
    }
-   v->buf[(v->curr_siz)-1] = c;
+   v->buf[v->curr_siz-1] = c;
    v->buf[v->curr_siz] = '\0';
 }
 

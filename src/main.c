@@ -13,9 +13,16 @@ int main(int argc, char *argv[])
    struct character_vector text;
    struct seven_bit_ascii *textpack;
 	FILE *fp;
-   
+  
+   if (argc < 2) {
+      fprintf(stderr, "Usage: %s filename\n", argv[0]);
+      return(1);
+   }
    create(&text);
-   fp = fopen(argv[1], "r");
+   if ( (fp = fopen(argv[1], "r")) == (FILE *) NULL ) {
+      fprintf(stderr, "error opening file %s\n", argv[1]);
+      return(1);
+   }
    while ( fgets(buf, sizeof(buf)-1, fp) ) {
       n = strlen(buf);
       for (i = 0; i < n; ++i)
@@ -36,7 +43,7 @@ int main(int argc, char *argv[])
    fp = fopen("dump.dat", "wb");
    for (i = 0; i < n; i += 8) {
       word = 0L;;
-      for (j = 0; j < 8; ++j) {
+      for (j = 0; j < 8 && i+j < n; ++j) {
          byte = textpack[i+j].ascii << 1;
          memcpy(&word, &byte, 1);
          word <<= 7;
