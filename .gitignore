@@ -1,0 +1,8 @@
+bitpack
+*.orig
+*.txt
+*.dat
+*~
+*.swp
+bin/
+obj/
