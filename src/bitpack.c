@@ -1,64 +1,29 @@
 #include <stdio.h>
+#include <string.h>
 #include "bitpack.h"
 
-/* output the bit pattern */
-void display_ascii(char a)
+long pack(char *block)
 {
-   int count, nbits;
-   char b, m, mask;
+   int i, n = strlen(block);
+   long word = 0L, work = 0L;
 
-   /* determine the word size in bits and set the initial mask */
-   nbits = 7;
-   m = 0x1 << (nbits - 1);       /* place 1 in leftmost position */
-
-   mask = m;
-   for (count = 1; count <= nbits; count++) {
-      b = (a & mask) ? 1 : 0;    /* set display bit on or off */
-      printf("%x", b);           /* print display bit */
-      if (count % 7 == 0)
-         putchar(' ');				/* blank spaces after every 4th digit */
-      mask >>= 1;
+   if (n > 8)
+      n = 8;
+   for (i = 0; i < n; ++i) {
+      work = block[i];
+      work <<= i*7;
+      word ^= work;
    }
+   return(word);
 }
 
-/* output the bit pattern */
-void display_byte(char a)
+void unpack(char bytes[], long word)
 {
-   int count, nbits;
-   char b;
-   unsigned char m, mask;
+   int i;
 
-   /* determine the word size in bits and set the initial mask */
-   nbits = 8 * sizeof(char);
-   m = 0x1 << (nbits - 1);       /* place 1 in leftmost position */
-
-   mask = m;
-   for (count = 1; count <= nbits; count++) {
-      b = (a & mask) ? 1 : 0;    /* set display bit on or off */
-      printf("%x", b);           /* print display bit */
-      if (count % 4 == 0)
-         putchar(' ');				/* blank spaces after every 4th digit */
-      mask >>= 1;
-   }
-}
-
-/* output the bit pattern */
-void display_word(long a)
-{
-   int count, nbits;
-   long b;
-   unsigned long m, mask;
-
-   /* determine the word size in bits and set the initial mask */
-   nbits = 8 * sizeof(long);
-   m = 0x1L << (nbits - 1);       /* place 1 in leftmost position */
-
-   mask = m;
-   for (count = 1; count <= nbits; count++) {
-      b = (a & mask) ? 1 : 0;    /* set display bit on or off */
-      printf("%x", b);           /* print display bit */
-      if (count % 4 == 0)
-         putchar(' ');				/* blank spaces after every 4th digit */
-      mask >>= 1;
+   memset(bytes, '\0', 9);
+   for (i = 0; i < 8; ++i) {
+      bytes[i] = word & 0x7f;
+      word >>= 7;
    }
 }

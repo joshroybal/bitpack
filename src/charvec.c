@@ -41,5 +41,5 @@ void destroy(struct character_vector *v)
 
 void teletype(struct character_vector *v)
 {
-   puts(v->buf);
+   printf("%s", v->buf);
 }

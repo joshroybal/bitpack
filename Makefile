@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -std=c89 -pedantic -Werror
-LFLAGS =
+CFLAGS = -O2 -std=c89 -pedantic -Werror
+LFLAGS = -s
 OBJS = obj/bitpack.o obj/charvec.o obj/main.o
 HDRS = src/bitpack.h src/charvec.h
 BIN = bitpack
